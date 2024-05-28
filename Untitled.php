@@ -43,8 +43,8 @@
 				<?php
                 session_start();
                 if (isset($_SESSION['error'])) {
-                    echo '<p style="color: red;">' . htmlspecialchars($_SESSION['error']) . '</p>';
-                    unset($_SESSION['error']); // Clear the error message
+                    echo '<p style="color: #222020; font-size: 15px; font-weight:400">' . htmlspecialchars($_SESSION['error']) . '</p>';
+                    unset($_SESSION['error']); 
                 }
                 ?>
 		</form>

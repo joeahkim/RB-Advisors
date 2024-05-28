@@ -1,35 +1,59 @@
 <?php
-// Database connection parameters
+session_start();
+
+// Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "rb_financial_advisors"; 
+$dbname = "rb_advisors";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-
 }
 
-// Query to fetch username and password from the database
-$sql = "SELECT username, password FROM users";
-$result = $conn->query($sql);
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form data
+    if (isset($_POST['email']) && isset($_POST['password'])) {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
+        // Fetch user from database
+        $sql = "SELECT * FROM users WHERE email='$email'";
+        $result = $conn->query($sql);
 
-    // Output data of each row{
-        if ($conn->query($sql) === TRUE) {
-            header("Location: dashboard.html"); // Redirect to login page after successful signup
-            exit();
+        if ($result) {
+            if ($result->num_rows > 0) {
+                $user = $result->fetch_assoc();
+
+                // Verify password
+                if (password_verify($password, $user['password'])) {
+                    // Start session and store user info
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_name'] = $user['name'];
+                    // Redirect to another page
+                    header("Location: dashboard.html");
+                    exit();
+                } else {
+                    $_SESSION['error'] = "Invalid password";
+                }
+            } else {
+                $_SESSION['error'] = "No user found with this email";
+            }
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error; 
+            $_SESSION['error'] = "SQL query error: " . $conn->error;
         }
- else {
-    echo "0 results";
+    } else {
+        $_SESSION['error'] = "Please provide both email and password.";
+    }
+} else {
+    $_SESSION['error'] = "Invalid request method.";
 }
 
-// Close connection
 $conn->close();
+header("Location: untitled.php");
+exit();
 ?>
