@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'config.php'; 
 
 // Database connection
 $servername = "localhost";
@@ -35,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
                     // Redirect to another page
-                    header("Location: dashboard.html");
+                    header("Location: dashboard.php");
                     exit();
                 } else {
                     $_SESSION['error'] = "Invalid password";

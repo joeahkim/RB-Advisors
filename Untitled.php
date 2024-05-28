@@ -58,7 +58,7 @@
 			</div>
 			<div class="overlay-panel overlay-right">
 				<h1>Join us</h1>
-				<p>Welcome you to this world of financial freedom</p>
+				<p>Welcome to this world of financial freedom</p>
 				<button class="ghost" id="signUp">Sign Up</button>
 			</div>
 		</div>
