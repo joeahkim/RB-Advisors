@@ -1,50 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>RB Financial Advisors</title>
-  <link rel="stylesheet" href="./styless.css">
-
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
-<html>
-<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>RB Financial Advisors</title>
-	<link rel="stylesheet" type="text/css" href="slide navbar styless.css">
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div class="main">  	
-		<input type="checkbox" id="chk" aria-hidden="true">
-
-			<div class="signup">
-				<form method="post" action="signup.php">
-					<label for="chk" aria-hidden="true">Sign up</label>
-					<input type="text" name="username" placeholder="User name" required="">
-					<input type="email" name="email" placeholder="Email" required="">
-					<input type="text" name="id_number" placeholder="ID Number" required="">
-					<input type="text" name="address" placeholder="Address" required="">
-					<input type="password" name="password" placeholder="Password" required="">
-					<button>Sign up</button>
-				</form>
+	<h2>RB ADVISORS</h2>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form action="#">
+			<h1>Create Account</h1>
+			<!-- <div class="social-container">
+				<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+				<a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+				<a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
 			</div>
-
-			<div class="login">
-				<form method="post" action="login.php">
-					<label for="chk" aria-hidden="true">Login</label>
-					<input type="email" name="email" placeholder="Email" required="">
-					<input type="password" name="password" placeholder="Password" required="">
-					<button>Login</button>
-				</form>
-			</div>
+			<span>or use your email for registration</span>-->
+			<input type="text" placeholder="Name" />
+			<input type="email" placeholder="Email" />
+			<input type="number" placeholder="ID Number" />
+			<input type="address" placeholder="Address" />
+			<input type="password" placeholder="Password" />
+			<button>Sign Up</button>
+		</form>
 	</div>
+	<div class="form-container sign-in-container">
+		<form action="#">
+			<h1>Sign in</h1>
+			<!--<div class="social-container">
+				<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+				<a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+				<a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+			</div>
+			<span>or use your account</span>-->
+			<input type="email" placeholder="Email" />
+			<input type="password" placeholder="Password" />
+			<a href="#">Forgot your password?</a>
+			<button>Sign In</button>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back!</h1>
+				<p>Already have an account? Sign in</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Join us</h1>
+				<p>Welcome you to this world of financial freedom</p>
+				<button class="ghost" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
 
-</body>
-</html>
-<!-- partial -->
-  
+<script src="script.js"></script>
 </body>
 </html>
