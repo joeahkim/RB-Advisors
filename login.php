@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
                     // Redirect to another page
-                    header("Location: dashboard.php");
+                    header("Location: dashboard.php?name=" . urlencode($user['name']));;
                     exit();
                 } else {
                     $_SESSION['error'] = "Invalid password";

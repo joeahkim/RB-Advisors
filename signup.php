@@ -23,7 +23,9 @@ $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Encrypt the 
 $sql = "INSERT INTO users (name, email, id_number, address, password) VALUES ('$name', '$email', '$idNumber', '$address', '$password')";
 
 if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
+    // Redirect to another page
+    header("Location: dashboard.php");
+    exit();
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
