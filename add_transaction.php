@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "rb_financial_advisors";
+$dbname = "rb_advisors";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -25,7 +25,8 @@ $stmt->bind_param("sssd", $date, $description, $transaction_type, $amount);
 
 // Execute the statement
 if ($stmt->execute()) {
-    echo "New transaction added successfully";
+    header("Location: dashboard.php");
+    exit();
 } else {
     echo "Error: " . $stmt->error;
 }
