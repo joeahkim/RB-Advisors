@@ -1,6 +1,10 @@
 <?php
-session_start();
-include 'config.php'; 
+session_start(); 
+// Redirect logged-in users to dashboard
+if(isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
 
 // Database connection
 $servername = "localhost";

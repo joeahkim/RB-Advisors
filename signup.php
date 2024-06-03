@@ -1,9 +1,7 @@
 <?php
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "rb_advisors";
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
