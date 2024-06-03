@@ -1,20 +1,4 @@
-<?php
-session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// Retrieve the name from URL parameter
-if (isset($_GET['name'])) {
-    $name = $_GET['name'];
-} else {
-    // Default name if not provided in URL
-    $name = "Guest";
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,7 +36,7 @@ if (isset($_GET['name'])) {
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link " href="./dashboard.html">
+          <a class="nav-link " href="./dashboard.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
             </div>
@@ -60,7 +44,7 @@ if (isset($_GET['name'])) {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="./addtransaction.html">
+          <a class="nav-link active" href="./addtransaction.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
             </div>
@@ -114,7 +98,7 @@ if (isset($_GET['name'])) {
           <div class="card mb-4">
             <div class="card-body px-0 pt-0 pb-2">
 
-              <form class="form-label" method="post" action="add_transaction.php">
+              <form class="form-label" method="post" action="add_transaction1.php">
                 <div class="row mb-3">
                   <label for="date" class="col-sm-2 col-form-label">Date</label>
                   <div class="col-sm-10">

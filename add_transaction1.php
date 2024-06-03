@@ -1,4 +1,19 @@
 <?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Retrieve the name from URL parameter
+if (isset($_GET['name'])) {
+    $name = $_GET['name'];
+} else {
+    // Default name if not provided in URL
+    $name = "Guest";
+}
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
