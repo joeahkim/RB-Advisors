@@ -1,7 +1,17 @@
 <?php
-// Database connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+session_start(); 
+// Redirect logged-in users to dashboard
+if(isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "rb_advisors";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

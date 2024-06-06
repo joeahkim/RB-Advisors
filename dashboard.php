@@ -14,6 +14,73 @@ if (isset($_GET['name'])) {
     // Default name if not provided in URL
     $name = "Guest";
 }
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "rb_advisors";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+// Fetch user's transactions
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM transactions WHERE user_id = '$user_id' ORDER BY date DESC";
+$result = $conn->query($sql);
+
+// Get the current balance
+$sql_current = "SELECT SUM(amount) as current_balance FROM transactions WHERE user_id = $user_id";
+$result_current = $conn->query($sql_current);
+$current_balance = $result_current->fetch_assoc()['current_balance'];
+
+// Get the balance from the previous period (e.g., last year)
+$last_year = date('Y', strtotime('-1 year'));
+$sql_previous = "SELECT SUM(amount) as previous_balance FROM transactions WHERE user_id = $user_id AND YEAR(date) = $last_year";
+$result_previous = $conn->query($sql_previous);
+$previous_balance = $result_previous->fetch_assoc()['previous_balance'];
+
+// Calculate the percentage increase
+if ($previous_balance > 0) {
+    $percentage_increase = (($current_balance - $previous_balance) / $previous_balance) * 100;
+} else {
+    $percentage_increase = 100; // If there was no previous balance, treat it as a 100% increase
+}
+
+// Define the date ranges
+$current_end_date = date('Y-m-d');
+$current_start_date = date('Y-m-d', strtotime('-30 days'));
+$previous_start_date = date('Y-m-d', strtotime('-60 days'));
+$previous_end_date = date('Y-m-d', strtotime('-30 days'));
+
+// Get the current withdrawals (last 30 days)
+$stmt_current = $conn->prepare("SELECT SUM(amount) as current_withdrawals FROM transactions WHERE user_id = ? AND type = 'withdrawal' AND date BETWEEN ? AND ?");
+$stmt_current->bind_param("iss", $user_id, $current_start_date, $current_end_date);
+$stmt_current->execute();
+$result_current = $stmt_current->get_result();
+$current_withdrawals = $result_current->fetch_assoc()['current_withdrawals'];
+
+// Get the previous withdrawals (30 days before the last 30 days)
+$stmt_previous = $conn->prepare("SELECT SUM(amount) as previous_withdrawals FROM transactions WHERE user_id = ? AND type = 'withdrawal' AND date BETWEEN ? AND ?");
+$stmt_previous->bind_param("iss", $user_id, $previous_start_date, $previous_end_date);
+$stmt_previous->execute();
+$result_previous = $stmt_previous->get_result();
+$previous_withdrawals = $result_previous->fetch_assoc()['previous_withdrawals'];
+
+// Calculate the percentage change
+if ($previous_withdrawals > 0) {
+    $percentage_change = (($current_withdrawals - $previous_withdrawals) / $previous_withdrawals) * 100;
+} else {
+    $percentage_change = ($current_withdrawals > 0) ? 100 : 0;
+}
+
+// Close the connection
+$stmt_current->close();
+$stmt_previous->close();
+$conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -22,21 +89,21 @@ if (isset($_GET['name'])) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="./assets/img/favicon.png">
   <title>
     RB Financial Advisors
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <link id="pagestyle" href="./assets/css/argon-dashboard.css" rel="stylesheet" />
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
@@ -60,14 +127,7 @@ if (isset($_GET['name'])) {
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link " href="./addtransaction.php">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Add a Transaction</span>
-          </a>
-        </li>
+       
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
@@ -177,11 +237,11 @@ if (isset($_GET['name'])) {
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Withdrawals</p>
                     <h5 class="font-weight-bolder">
-                      Ksh 1,462,000
+                      Ksh<?php echo htmlspecialchars(number_format($current_withdrawals, 2)); ?>
                     </h5>
                     <p class="mb-0">
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                      since 1/1/2024
+                      <span class="text-danger text-sm font-weight-bolder">  <?php echo htmlspecialchars(number_format($percentage_change, 2)); ?>%</span>
+                      from <?php echo htmlspecialchars(date('j/n/Y', strtotime($current_start_date))); ?>
                     </p>
                   </div>
                 </div>
@@ -202,10 +262,10 @@ if (isset($_GET['name'])) {
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Account Balance</p>
                     <h5 class="font-weight-bolder">
-                      Ksh 838,570
+                      Ksh <?php echo number_format($current_balance, 2); ?>
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+5%</span> than last Year
+                      <span class="text-success text-sm font-weight-bolder"><?php echo number_format($percentage_increase, 2); ?>% more</span> in <?php echo date('Y'); ?>
                     </p>
                   </div>
                 </div>
@@ -289,6 +349,7 @@ if (isset($_GET['name'])) {
                 <h6 class="mb-2">Transactions history</h6>
               </div>
             </div>
+            <!-- 
             <div class="table-responsive">
               <table class="table align-items-center ">
                 <tbody>
@@ -323,78 +384,34 @@ if (isset($_GET['name'])) {
                   </tr>
                 </tbody>
               </table>
-            </div>
-        
-                <div class="table-responsive">
-                  <table class="table align-items-center ">
-                    <tbody>
-                      <tr>
-                        <td class="w-30">
-                          <div class="d-flex px-2 py-1 align-items-center">
-                            <div class="ms-4">
-                              <h6 class="text-sm mb-0">5/11/2024</h6>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="text-center">
-                            <h6 class="text-sm mb-0">Withdrew</h6>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="text-center">
-                            <h6 class="text-sm mb-0">0</h6>
-                          </div>
-                        </td>
-                        <td class="align-middle text-sm">
-                          <div class="col text-center">
-                            <h6 class="text-sm mb-0">50000</h6>
-                          </div>
-                        </td>
-                        <td class="align-middle text-sm">
-                          <div class="col text-center">
-                            <h6 class="text-sm mb-0">SB56DGFG</h6>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-items-center ">
-                      <tbody>
-                        <tr>
-                          <td class="w-30">
-                            <div class="d-flex px-2 py-1 align-items-center">
-                              <div class="ms-4">
-                                <h6 class="text-sm mb-0">5/11/2024</h6>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <div class="text-center">
-                              <h6 class="text-sm mb-0">Withdrew</h6>
-                            </div>
-                          </td>
-                          <td>
-                            <div class="text-center">
-                              <h6 class="text-sm mb-0">0</h6>
-                            </div>
-                          </td>
-                          <td class="align-middle text-sm">
-                            <div class="col text-center">
-                              <h6 class="text-sm mb-0">50000</h6>
-                            </div>
-                          </td>
-                          <td class="align-middle text-sm">
-                            <div class="col text-center">
-                              <h6 class="text-sm mb-0">SB56DGFG</h6>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+            </div> -->
+            <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Transaction Type</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+
+            <tbody>
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['date']); ?></td>
+                        <td><?php echo htmlspecialchars($row['description']); ?></td>
+                        <td><?php echo htmlspecialchars($row['transaction_type']); ?></td>
+                        <td><?php echo htmlspecialchars($row['amount']); ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4">No transactions found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+            </table>
           
       <footer class="footer pt-3  ">
         <div class="container-fluid">
@@ -466,11 +483,11 @@ if (isset($_GET['name'])) {
     </div>
   </div>
   <!--   Core JS Files   -->
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script src="./assets/js/core/popper.min.js"></script>
+  <script src="./assets/js/core/bootstrap.min.js"></script>
+  <script src="./assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="./assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="./assets/js/plugins/chartjs.min.js"></script>
   <script>
     var ctx1 = document.getElementById("chart-line").getContext("2d");
 
