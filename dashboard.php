@@ -76,6 +76,28 @@ if ($previous_withdrawals > 0) {
     $percentage_change = ($current_withdrawals > 0) ? 100 : 0;
 }
 
+
+// Get the current deposits (last 30 days)
+$stmt_current = $conn->prepare("SELECT SUM(amount) as current_deposits FROM transactions WHERE user_id = ? AND type = 'deposit' AND date BETWEEN ? AND ?");
+$stmt_current->bind_param("iss", $user_id, $current_start_date, $current_end_date);
+$stmt_current->execute();
+$result_current = $stmt_current->get_result();
+$current_deposits = $result_current->fetch_assoc()['current_deposits'];
+
+// Get the previous deposits (30 days before the last 30 days)
+$stmt_previous = $conn->prepare("SELECT SUM(amount) as previous_deposits FROM transactions WHERE user_id = ? AND type = 'deposit' AND date BETWEEN ? AND ?");
+$stmt_previous->bind_param("iss", $user_id, $previous_start_date, $previous_end_date);
+$stmt_previous->execute();
+$result_previous = $stmt_previous->get_result();
+$previous_deposits = $result_previous->fetch_assoc()['previous_deposits'];
+
+// Calculate the percentage change
+if ($previous_deposits > 0) {
+    $percentage_change_deposits = (($current_deposits - $previous_deposits) / $previous_deposits) * 100;
+} else {
+    $percentage_change_deposits = ($current_deposits > 0) ? 100 : 0;
+}
+
 // Close the connection
 $stmt_current->close();
 $stmt_previous->close();
@@ -90,7 +112,7 @@ $conn->close();
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="./assets/img/favicon.png">
+  <link rel="icon" type="image/png" href="./assets/img/favicon.jpg">
   <title>
     RB Financial Advisors
   </title>
@@ -112,7 +134,7 @@ $conn->close();
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="./index.html">
-        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="./assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold">RB Advisors</span>
       </a>
     </div>
@@ -187,11 +209,12 @@ $conn->close();
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">This Month's Deposits</p>
                     <h5 class="font-weight-bolder">
-                      Ksh 53,000
+                       Ksh <?php echo htmlspecialchars(number_format($current_deposits, 2)); ?>
+
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
-                      since 5/1/2024
+                      <span class="text-success text-sm font-weight-bolder">  <?php echo htmlspecialchars(number_format($percentage_change_deposits, 2)); ?>%</span>
+                      since  <?php echo htmlspecialchars(date('j/n/Y', strtotime($current_start_date))); ?>
                     </p>
                   </div>
                 </div>
