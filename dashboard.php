@@ -154,7 +154,7 @@ $conn->close();
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="../pages/profile.html">
+          <a class="nav-link " href="./pages/profile.html">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
             </div>
@@ -323,7 +323,7 @@ $conn->close();
           <div class="card card-carousel overflow-hidden h-100 p-0">
             <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
               <div class="carousel-inner border-radius-lg h-100">
-                <div class="carousel-item h-100 active" style="background-image: url('../assets/img/carousel-1.jpg');
+                <div class="carousel-item h-100 active" style="background-image: url('./assets/img/carousel-1.jpg');
       background-size: cover;">
                   <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
@@ -333,7 +333,7 @@ $conn->close();
                     <p>Continue Saving with us and watch your Financial life mature with time.</p>
                   </div>
                 </div>
-                <div class="carousel-item h-100" style="background-image: url('../assets/img/carousel-2.jpg');
+                <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-2.jpg');
       background-size: cover;">
                   <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
@@ -343,7 +343,7 @@ $conn->close();
                     <p>Invite your friends and family to join the the RB financial world.</p>
                   </div>
                 </div>
-                <div class="carousel-item h-100" style="background-image: url('../assets/img/carousel-3.jpg');
+                <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-3.jpg');
       background-size: cover;">
                   <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
