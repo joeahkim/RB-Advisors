@@ -30,6 +30,9 @@ if(isset($_SESSION['user_id'])) {
 			<input type="number" id="idNumber" name="idNumber" placeholder="ID Number" required/>
 			<input type="address" id="address" name="address" placeholder="Address" required/>
 			<input type="password" id="password" name="password" placeholder="Password" required/>
+			<label>
+            <input type="checkbox" name="terms" required> I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>
+        	</label>
 			<button>Sign Up</button>
 		</form>
 	</div>
