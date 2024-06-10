@@ -163,13 +163,28 @@ $conn->close();
         </li>
         <li class="nav-item">
           <a class="nav-link " href="./auth/logout.php">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <img src="./images/signout.png">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+             <img src="./images/signout.png">
             </div>
             <span class="nav-link-text ms-1">Log Out</span>
           </a>
         </li>
       </ul>
+    </div>
+
+    <div class="sidenav-footer mx-3 ">
+      <div class="card card-plain shadow-none" id="sidenavCard">
+        <div class="card-body pt-sm-3 pt-0 overflow-auto">
+      
+          <div class="mt-2 mb-5 d-flex">
+            <h6 class="mb-0">Light / Dark</h6>
+            <div class="form-check form-switch ps-0 ms-auto my-auto">
+              <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+            </div>
+          </div>
+         
+        </div>
+      </div>
     </div>
   </aside>
   <main class="main-content position-relative border-radius-lg ">
