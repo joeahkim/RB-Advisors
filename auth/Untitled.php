@@ -1,7 +1,7 @@
 <?php
 // Redirect logged-in users to dashboard
 if(isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: ../dashboard.php");
     exit();
 }
 ?>
@@ -11,7 +11,7 @@ if(isset($_SESSION['user_id'])) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>RB Financial Advisors</title>
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="../style.css">
 </head>
 <body>
 	<h2>RB ADVISORS</h2>
