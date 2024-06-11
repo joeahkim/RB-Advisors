@@ -1,3 +1,4 @@
+
 <?php
 // Redirect logged-in users to dashboard
 if(isset($_SESSION['user_id'])) {
@@ -17,8 +18,7 @@ if(isset($_SESSION['user_id'])) {
 <body>
 	<h2>RB ADVISORS</h2>
 <div class="container" id="container">
-	
-	<div class="form-container sign-in-container">
+	<div class="form-container sign-in-container col-md-12">
 		<form action="./login.php" method="POST">
 			<h1>Sign in</h1>
 			<!--<div class="social-container">
@@ -50,7 +50,6 @@ if(isset($_SESSION['user_id'])) {
 		</div>
 	</div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="../../script.js"></script>
 </body>

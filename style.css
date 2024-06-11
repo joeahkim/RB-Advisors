@@ -823,3 +823,11 @@ input {
 	height: 40px;
 	width: 40px;
 }
+@media screen and (max-width: 768px) {
+
+
+    .container .sign-in-container {
+        left: 0;
+        width: 100%;
+        z-index: 2;
+  }}
