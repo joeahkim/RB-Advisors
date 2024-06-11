@@ -37,7 +37,7 @@ if(isset($_SESSION['user_id'])) {
 		</form>
 	</div>
 	<div class="form-container sign-in-container">
-		<form action="login.php" method="POST">
+		<form action="./login.php" method="POST">
 			<h1>Sign in</h1>
 			<!--<div class="social-container">
 				<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -75,6 +75,6 @@ if(isset($_SESSION['user_id'])) {
 	</div>
 </div>
 
-<script src="script.js"></script>
+<script src="../script.js"></script>
 </body>
 </html>

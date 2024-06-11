@@ -3,7 +3,7 @@
 session_start(); 
 // Redirect logged-in users to dashboard
 if(isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: ../dashboard.php");
     exit();
 }
 
@@ -32,7 +32,7 @@ $sql = "INSERT INTO users (name, email, id_number, address, password) VALUES ('$
 
 if ($conn->query($sql) === TRUE) {
     // Redirect to another page
-    header("Location: dashboard.php");
+    header("Location: ../dashboard.php");
     exit();
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
