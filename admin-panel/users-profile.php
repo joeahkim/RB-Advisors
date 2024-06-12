@@ -7,7 +7,7 @@
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item">Admins</li>
           <li class="breadcrumb-item active">Profile</li>
         </ol>
       </nav>
@@ -20,7 +20,7 @@
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+              <img src="assets/img/ceo.jpg" alt="Profile" class="rounded-circle">
               <h2>Regina Gakuru</h2>
               <h3>CEO</h3>
               <div class="social-links mt-2">

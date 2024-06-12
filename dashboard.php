@@ -56,14 +56,14 @@ $previous_start_date = date('Y-m-d', strtotime('-60 days'));
 $previous_end_date = date('Y-m-d', strtotime('-30 days'));
 
 // Get the current withdrawals (last 30 days)
-$stmt_current = $conn->prepare("SELECT SUM(amount) as current_withdrawals FROM transactions WHERE user_id = ? AND type = 'withdrawal' AND date BETWEEN ? AND ?");
+$stmt_current = $conn->prepare("SELECT SUM(amount) as current_withdrawals FROM transactions WHERE user_id = ? AND transaction_type = 'withdrawal' AND date BETWEEN ? AND ?");
 $stmt_current->bind_param("iss", $user_id, $current_start_date, $current_end_date);
 $stmt_current->execute();
 $result_current = $stmt_current->get_result();
 $current_withdrawals = $result_current->fetch_assoc()['current_withdrawals'];
 
 // Get the previous withdrawals (30 days before the last 30 days)
-$stmt_previous = $conn->prepare("SELECT SUM(amount) as previous_withdrawals FROM transactions WHERE user_id = ? AND type = 'withdrawal' AND date BETWEEN ? AND ?");
+$stmt_previous = $conn->prepare("SELECT SUM(amount) as previous_withdrawals FROM transactions WHERE user_id = ? AND transaction_type = 'withdrawal' AND date BETWEEN ? AND ?");
 $stmt_previous->bind_param("iss", $user_id, $previous_start_date, $previous_end_date);
 $stmt_previous->execute();
 $result_previous = $stmt_previous->get_result();
@@ -78,14 +78,14 @@ if ($previous_withdrawals > 0) {
 
 
 // Get the current deposits (last 30 days)
-$stmt_current = $conn->prepare("SELECT SUM(amount) as current_deposits FROM transactions WHERE user_id = ? AND type = 'deposit' AND date BETWEEN ? AND ?");
+$stmt_current = $conn->prepare("SELECT SUM(amount) as current_deposits FROM transactions WHERE user_id = ? AND transaction_type = 'deposit' AND date BETWEEN ? AND ?");
 $stmt_current->bind_param("iss", $user_id, $current_start_date, $current_end_date);
 $stmt_current->execute();
 $result_current = $stmt_current->get_result();
 $current_deposits = $result_current->fetch_assoc()['current_deposits'];
 
 // Get the previous deposits (30 days before the last 30 days)
-$stmt_previous = $conn->prepare("SELECT SUM(amount) as previous_deposits FROM transactions WHERE user_id = ? AND type = 'deposit' AND date BETWEEN ? AND ?");
+$stmt_previous = $conn->prepare("SELECT SUM(amount) as previous_deposits FROM transactions WHERE user_id = ? AND transaction_type = 'deposit' AND date BETWEEN ? AND ?");
 $stmt_previous->bind_param("iss", $user_id, $previous_start_date, $previous_end_date);
 $stmt_previous->execute();
 $result_previous = $stmt_previous->get_result();

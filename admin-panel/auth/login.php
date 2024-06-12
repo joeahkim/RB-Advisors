@@ -1,7 +1,30 @@
 <?php
 session_start(); 
+
+// Enforce HTTPS
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+    $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $redirect);
+    exit();
+}
+
+// Set session cookie parameters
+$cookieParams = session_get_cookie_params();
+session_set_cookie_params([
+    'lifetime' => $cookieParams['lifetime'],
+    'path' => $cookieParams['path'],
+    'domain' => $cookieParams['domain'],
+    'secure' => true, // Ensure cookie is sent over HTTPS
+    'httponly' => true, // Prevent JavaScript access
+    'samesite' => 'Strict' // Prevent CSRF
+]);
+
+// Regenerate session ID to prevent session fixation
+session_regenerate_id(true);
+
 // Redirect logged-in users to dashboard
-if(isset($_SESSION['admin_id'])) {
+if (isset($_SESSION['admin_id'])) {
     header("Location: ../index.php");
     exit();
 }
@@ -26,31 +49,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // Fetch user from database
-        $sql = "SELECT * FROM users WHERE email='$email'";
-        $result = $conn->query($sql);
+        // Fetch user from database using prepared statement
+        $stmt = $conn->prepare("SELECT id, adminname, password FROM admins WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
 
-        if ($result) {
-            if ($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($user_id, $user_name, $hashed_password);
+            $stmt->fetch();
 
-                // Verify password
-                if (password_verify($password, $user['password'])) {
-                    // Start session and store user info
-                    $_SESSION['admin_id'] = $user['id'];
-                    $_SESSION['user_name'] = $user['name'];
-                    // Redirect to another page
-                    header("Location: ../index.php?name=" . urlencode($user['name']));;
-                    exit();
-                } else {
-                    $_SESSION['error'] = "Invalid password";
-                }
+            // Verify password
+            if (password_verify($password, $hashed_password)) {
+                // Start session and store user info
+                $_SESSION['admin_id'] = $user_id;
+                $_SESSION['user_name'] = $user_name;
+                // Redirect to dashboard
+                header("Location: ../index.php");
+                exit();
             } else {
-                $_SESSION['error'] = "No user found with this email";
+                $_SESSION['error'] = "Invalid password";
             }
         } else {
-            $_SESSION['error'] = "SQL query error: " . $conn->error;
+            $_SESSION['error'] = "No admin found with this email";
         }
+        $stmt->close();
     } else {
         $_SESSION['error'] = "Please provide both email and password.";
     }
@@ -59,6 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-header("Location: untitled.php");
+header("Location: ./login-admin.php");
 exit();
 ?>

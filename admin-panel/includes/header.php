@@ -3,18 +3,24 @@
   session_start();
   define("ADMINURL", "http://localhost/RB Advisors/admin-panel");
 
-  // Check if user is logged in
+// Enforce HTTPS
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+    $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $redirect);
+    exit();
+}
+
+// Check if user is logged in
 if (!isset($_SESSION['admin_id'])) {
-  header("Location: ./auth/login-admin.php");
-  exit();
+    header("Location: ./auth/login-admin.php");
+    exit();
 }
-    // Retrieve the name from URL parameter
-if (isset($_GET['name'])) {
-  $name = $_GET['name'];
-} else {
-  // Default name if not provided in URL
-  $name = "Guest";
-}
+
+// Retrieve the name from session
+$name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : "Guest";
+
+
 ?>
 
 <!DOCTYPE html>

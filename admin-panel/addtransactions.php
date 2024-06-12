@@ -2,11 +2,6 @@
 <?php require "../config/config.php"; ?>
 
 <?php
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
 
 // Initialize variables to store messages
 $success = "";
@@ -20,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = htmlspecialchars($_POST['description']);
     $transaction_type = htmlspecialchars($_POST['transaction_type']);
     $amount = htmlspecialchars($_POST['amount']);
-    $user_id = $_SESSION['user_id'];
+    $user_id = $_SESSION['admin_id'];
 
     // Prepare SQL statement to prevent SQL injection
     $stmt = $conn->prepare("INSERT INTO transactions (user_id, name, date, description, transaction_type, amount) VALUES (?, ?, ?, ?, ?, ?)");
@@ -72,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <label  class="col-form-label col-sm-2">Client Name</label>
                   <div class="col-sm-10">
                   <input type="text" class="form-control" id="client_name" name="name" list="client_name_list" required>
-                  <datalist id="client_name_list"></datalist>
+                  <!-- <datalist id="client_name_list"></datalist> -->
                 </div>
                 </div>
                 <div class="row mb-3">
