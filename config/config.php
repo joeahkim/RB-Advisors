@@ -1,37 +1,14 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "rb_advisors";
 
-<?php 
-      
-      // if(!isset($_SERVER['HTTP_REFERER'])){
-      //     // redirect them to your desired location
-      //     header('location: http://localhost/freshcery/index.php');
-      //     exit;
-      // }
-  
-        
-      try {
-          
-          //host
-          if (!defined('HOST')) define("HOST", "localhost");
-  
-          //dbname
-          if (!defined('DBNAME')) define("DBNAME", "rb_advisors");
-  
-          //user
-          if (!defined('USER')) define("USER", "root");
-  
-          //pass
-          if (!defined('PASS')) define("PASS", "");
-  
-  
-          $conn = new PDO("mysql:host=".HOST.";dbname=".DBNAME.";", USER, PASS);
-          $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  
-          // if($conn == true) {
-          //     echo "connected successfully";
-          // } else {
-          //     echo "error";
-          // }
-  
-      } catch (PDOException $e) {
-          echo $e->getMessage();
-      }
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>

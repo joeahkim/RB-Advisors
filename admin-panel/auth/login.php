@@ -2,7 +2,7 @@
 session_start(); 
 // Redirect logged-in users to dashboard
 if(isset($_SESSION['user_id'])) {
-    header("Location: ../index.html");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
                     // Redirect to another page
-                    header("Location: ../index.html?name=" . urlencode($user['name']));;
+                    header("Location: ../index.php?name=" . urlencode($user['name']));;
                     exit();
                 } else {
                     $_SESSION['error'] = "Invalid password";
