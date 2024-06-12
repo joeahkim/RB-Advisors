@@ -1,7 +1,7 @@
 <?php
 session_start(); 
 // Redirect logged-in users to dashboard
-if(isset($_SESSION['user_id'])) {
+if(isset($_SESSION['admin_id'])) {
     header("Location: ../index.php");
     exit();
 }
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Verify password
                 if (password_verify($password, $user['password'])) {
                     // Start session and store user info
-                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['admin_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
                     // Redirect to another page
                     header("Location: ../index.php?name=" . urlencode($user['name']));;

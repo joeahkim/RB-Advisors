@@ -1,5 +1,11 @@
 <?php require "includes/header.php"; ?>
 <?php require "../config/config.php"; ?>
+<?php
+// Fetch all transactions
+$stmt = $conn->prepare("SELECT * FROM transactions ORDER BY date DESC");
+$stmt->execute();
+$result = $stmt->get_result();
+?>
    
   <main id="main" class="main">
 
@@ -36,6 +42,17 @@
                   </tr>
                 </thead>
                 <tbody>
+                <?php
+                  while ($row = $result->fetch_assoc()) {
+                      echo "<tr>";
+                      echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['transaction_type']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['description']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
+                      echo "</tr>";
+                  }
+                  ?>
                   
                 </tbody>
               </table>
