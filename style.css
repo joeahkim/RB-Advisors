@@ -610,7 +610,7 @@ body {
 	align-items: center;
 	flex-direction: column;
 	font-family: 'Montserrat', sans-serif;
-	height: 100vh;
+	height: 150vh;
 	margin: -20px 0 50px;
 }
 
@@ -759,7 +759,7 @@ input {
 
 .overlay {
 	background: wheat;
-	background: -webkit-linear-gradient(to right, #222020, #928b8c);
+	background: -webkit-linear-gradient(to right, #242222, #928b8c);
 	background: linear-gradient(to right, #444241, #575354);
 	background-repeat: no-repeat;
 	background-size: cover;

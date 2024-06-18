@@ -255,7 +255,7 @@ $conn->close();
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">This Years Total Deposits</p>
                     <h5 class="font-weight-bolder">
-                      Ksh 2,300,570
+                      Ksh 0.00
                     </h5>
                     <p class="mb-0">
                       <span class="text-success text-sm font-weight-bolder">+3%</span>

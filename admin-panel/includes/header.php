@@ -54,46 +54,7 @@ $name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : "Guest";
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
   
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        .autocomplete-suggestions {
-            border: 1px solid #999;
-            background: #FFF;
-            overflow: auto;
-        }
-        .autocomplete-suggestion {
-            padding: 8px;
-            cursor: pointer;
-        }.autocomplete-selected {
-            background: #F0F0F0;
-        }
-    </style>
-    <script>
-        $(document).ready(function() {
-            $("#client_name").on("input", function() {
-                let query = $(this).val();
-                if (query.length >= 1) {
-                    $.ajax({
-                        url: "fetch_clients.php",
-                        method: "GET",
-                        data: { term: query },
-                        success: function(data) {
-                            let clients = JSON.parse(data);
-                            let dropdown = $("#client_name_list");
-                            dropdown.empty();
-
-                            clients.forEach(function(client) {
-                                dropdown.append("<option value='" + client + "'>");
-                            });
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-  
-
+   
 </head>
 
 <body>
@@ -276,15 +237,6 @@ $name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : "Guest";
           <span>Add Transactions</span>
         </a>
       </li><!-- End Add a Transaction Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.php">
-          <i class="bi bi-card-list"></i>
-          <span>Create New Client</span>
-        </a>
-      </li><!-- End create a client Nav -->
-
-
     </ul>
 
   </aside><!-- End Sidebar-->
