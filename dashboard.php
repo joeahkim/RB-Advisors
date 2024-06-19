@@ -31,23 +31,32 @@ $user_id = $_SESSION['user_id'];
 $sql = "SELECT * FROM transactions WHERE user_id = '$user_id' ORDER BY date DESC";
 $result = $conn->query($sql);
 
-// Get the current balance
-$sql_current = "SELECT SUM(amount) as current_balance FROM transactions WHERE user_id = $user_id";
-$result_current = $conn->query($sql_current);
-$current_balance = $result_current->fetch_assoc()['current_balance'];
+// Get the current deposit
+$sql_current_deposit = "SELECT SUM(amount) as current_balance FROM transactions WHERE user_id = $user_id AND transaction_type = 'deposit'";
+$result_current_deposit = $conn->query($sql_current_deposit);
+$total_current_deposit = $result_current_deposit->fetch_assoc()['current_balance'];
+
+// Get the current withdraw
+$sql_current_withdraw = "SELECT SUM(amount) as current_balance FROM transactions WHERE user_id = $user_id AND transaction_type = 'withdraw'";
+$result_current_withdraw = $conn->query($sql_current_withdraw);
+$total_current_withdraw = $result_current_withdraw->fetch_assoc()['current_balance'];
+
+$balance = $total_current_deposit - $total_current_withdraw;
 
 // Get the balance from the previous period (e.g., last year)
 $last_year = date('Y', strtotime('-1 year'));
-$sql_previous = "SELECT SUM(amount) as previous_balance FROM transactions WHERE user_id = $user_id AND YEAR(date) = $last_year";
+$sql_previous = "SELECT SUM(amount) as previous_balance FROM transactions WHERE user_id = $user_id AND transaction_type = 'deposit' AND YEAR(date) = $last_year";
 $result_previous = $conn->query($sql_previous);
 $previous_balance = $result_previous->fetch_assoc()['previous_balance'];
 
+
 // Calculate the percentage increase
-if ($previous_balance > 0) {
-    $percentage_increase = (($current_balance - $previous_balance) / $previous_balance) * 100;
-} else {
-    $percentage_increase = 100; // If there was no previous balance, treat it as a 100% increase
-}
+// if ($previous_balance > 0) {
+//     $percentage_increase = (($current_balance - $previous_balance) / $previous_balance) * 100;
+// } else {
+//     $percentage_increase = 100; // If there was no previous balance, treat it as a 100% increase
+// }
+
 
 // Define the date ranges
 $current_end_date = date('Y-m-d');
@@ -98,6 +107,7 @@ if ($previous_deposits > 0) {
     $percentage_change_deposits = ($current_deposits > 0) ? 100 : 0;
 }
 
+
 // Close the connection
 $stmt_current->close();
 $stmt_previous->close();
@@ -123,6 +133,7 @@ $conn->close();
   <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="./assets/css/argon-dashboard.css" rel="stylesheet" />
@@ -255,7 +266,7 @@ $conn->close();
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">This Years Total Deposits</p>
                     <h5 class="font-weight-bolder">
-                      Ksh 0.00
+                       Ksh<?php echo htmlspecialchars(number_format($totals_current_deposit, 2)); ?>
                     </h5>
                     <p class="mb-0">
                       <span class="text-success text-sm font-weight-bolder">+3%</span>
@@ -305,11 +316,11 @@ $conn->close();
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Account Balance</p>
                     <h5 class="font-weight-bolder">
-                      Ksh <?php echo number_format($current_balance, 2); ?>
+                      Ksh <?php echo number_format($balance, 2); ?>
                     </h5>
-                    <p class="mb-0">
+                    <!-- <p class="mb-0">
                       <span class="text-success text-sm font-weight-bolder"><?php echo number_format($percentage_increase, 2); ?>% more</span> in <?php echo date('Y'); ?>
-                    </p>
+                    </p> -->
                   </div>
                 </div>
                 <div class="col-4 text-end">
@@ -455,7 +466,7 @@ $conn->close();
             <?php endif; ?>
         </tbody>
             </table>
-          
+     
       <footer class="footer pt-3  ">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
